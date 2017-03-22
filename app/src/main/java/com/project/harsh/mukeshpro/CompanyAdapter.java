@@ -18,13 +18,19 @@ public class CompanyAdapter extends BaseAdapter{
     Context context;
     int layoutResourceId;
     ArrayList<CompanyPost> posts;
+    ArrayList<AgentNamesPost> agnames;
     AlertDialog alertDialog1;
-    CharSequence[] values = {" First Item "," Second Item "," Third Item "};
+//    CharSequence[] values = {" First Item "," Second Item "," Third Item "};
 
-    public CompanyAdapter(Context context, int layoutResourceId, ArrayList<CompanyPost> posts) {
+
+
+    public CompanyAdapter(Context context, int layoutResourceId, ArrayList<CompanyPost> posts,
+                          ArrayList<AgentNamesPost> agnames) {
+        super();
         this.context = context;
         this.layoutResourceId = layoutResourceId;
         this.posts = posts;
+        this.agnames = agnames;
     }
 
     @Override
@@ -40,6 +46,11 @@ public class CompanyAdapter extends BaseAdapter{
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
     }
 
     static class ViewHolder
@@ -90,36 +101,45 @@ public class CompanyAdapter extends BaseAdapter{
         String none = "None";
 
         holder.assignTo.setText("Assign To : " +none);
-
+        final String[] stringarray =  new String[agnames.size()];
+        for (int i = 0; i <agnames.size() ; i++) {
+            stringarray[i] = agnames.get(i).toString();
+        }
         holder.assign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getRootView().getContext());
 
                 builder.setTitle("Select Your Choice");
-
-                builder.setSingleChoiceItems(values, -1, new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int item) {
-
-                        switch(item)
-                        {
-                            case 0:
-
-                                Toast.makeText(v.getRootView().getContext(), "First Item Clicked", Toast.LENGTH_LONG).show();
-                                break;
-                            case 1:
-
-                                Toast.makeText(v.getRootView().getContext(), "Second Item Clicked", Toast.LENGTH_LONG).show();
-                                break;
-                            case 2:
-
-                                Toast.makeText(v.getRootView().getContext(), "Third Item Clicked", Toast.LENGTH_LONG).show();
-                                break;
-                        }
+                builder.setSingleChoiceItems(stringarray, -1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(v.getRootView().getContext(), "name"+ which, Toast.LENGTH_LONG).show();
                         alertDialog1.dismiss();
                     }
                 });
+//                builder.setSingleChoiceItems(values, -1, new DialogInterface.OnClickListener() {
+//
+//                    public void onClick(DialogInterface dialog, int item) {
+//
+//                        switch(item)
+//                        {
+//                            case 0:
+//
+//                                Toast.makeText(v.getRootView().getContext(), "First Item Clicked", Toast.LENGTH_LONG).show();
+//                                break;
+//                            case 1:
+//
+//                                Toast.makeText(v.getRootView().getContext(), "Second Item Clicked", Toast.LENGTH_LONG).show();
+//                                break;
+//                            case 2:
+//
+//                                Toast.makeText(v.getRootView().getContext(), "Third Item Clicked", Toast.LENGTH_LONG).show();
+//                                break;
+//                        }
+//                        alertDialog1.dismiss();
+//                    }
+//                });
                 alertDialog1 = builder.create();
                 alertDialog1.show();
 //                Toast.makeText(context, "Assign Clicked: " +position, Toast.LENGTH_SHORT).show();
@@ -134,10 +154,4 @@ public class CompanyAdapter extends BaseAdapter{
 //        });
         return convertView;
     }
-
-    private void CreateAlertDialogWithRadioButtonGroup() {
-
-    }
-
-
 }
